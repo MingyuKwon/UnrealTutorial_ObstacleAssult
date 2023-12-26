@@ -16,12 +16,22 @@ void AMovingPlatform::BeginPlay()
 {
 	Super::BeginPlay();	
 	startPosition = GetActorLocation();
+	UE_LOG(LogTemp, Display, TEXT("Distance Limit : %f"), moveLimit);
+	
 }
 
 // Called every frame
 void AMovingPlatform::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+
+	MovePlatform(DeltaTime);
+	RotatePlatform(DeltaTime);
+}
+
+
+void AMovingPlatform::MovePlatform(float DeltaTime)
+{
 	FVector currentPosition = GetActorLocation();
 	currentPosition += MovingVector * DeltaTime;
 	float movedDistance = FVector::Distance(currentPosition, startPosition);
@@ -29,6 +39,7 @@ void AMovingPlatform::Tick(float DeltaTime)
 
 	if(movedDistance >= moveLimit)
 	{
+		UE_LOG(LogTemp, Display, TEXT("OverShoot : %f = %s"), (movedDistance - moveLimit), *GetName());
 		startPosition = startPosition + MovingVector.GetSafeNormal() * moveLimit;
 		SetActorLocation(startPosition);
 		MovingVector = -MovingVector;
@@ -36,3 +47,7 @@ void AMovingPlatform::Tick(float DeltaTime)
 
 }
 
+void AMovingPlatform::RotatePlatform(float DeltaTime)
+{
+	AddActorLocalRotation(RotatingVelocity * DeltaTime);
+}
