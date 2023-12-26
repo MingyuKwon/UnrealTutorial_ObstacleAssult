@@ -14,14 +14,25 @@ AMovingPlatform::AMovingPlatform()
 // Called when the game starts or when spawned
 void AMovingPlatform::BeginPlay()
 {
-	Super::BeginPlay();
-	
+	Super::BeginPlay();	
+	startPosition = GetActorLocation();
 }
 
 // Called every frame
 void AMovingPlatform::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+	FVector currentPosition = GetActorLocation();
+	currentPosition += MovingVector * DeltaTime;
+	float movedDistance = FVector::Distance(currentPosition, startPosition);
+	SetActorLocation(currentPosition);
+
+	if(movedDistance >= moveLimit)
+	{
+		startPosition = startPosition + MovingVector.GetSafeNormal() * moveLimit;
+		SetActorLocation(startPosition);
+		MovingVector = -MovingVector;
+	}
 
 }
 

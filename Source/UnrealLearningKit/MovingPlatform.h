@@ -23,4 +23,11 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
+	UPROPERTY(EditAnyWhere)
+	FVector MovingVector = FVector(200,0,0);
+
+	UPROPERTY(EditAnyWhere)
+	float moveLimit = 100;
+
+	FVector startPosition;
 };
